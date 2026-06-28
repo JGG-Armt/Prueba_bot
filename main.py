@@ -5,7 +5,7 @@ import datetime
 
 # ---------------------------------------------------------
 # PEGA AQUÍ TU TOKEN REAL ENTRE COMILLAS
-# ---------------------------------------------------------
+# --------------------------------------------------------
 TOKEN = "8934368812:AAE7hb0dv6sDiOrtpVW3rn4HAPvUZOzuiJw"
 
 TELEGRAM_URL = f"https://api.telegram.org/bot{TOKEN}/"
