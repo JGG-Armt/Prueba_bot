@@ -5,7 +5,9 @@ import datetime
 
 # ---------------------------------------------------------
 # PEGA AQUÍ TU TOKEN REAL ENTRE COMILLAS
-# --------------------------------------------------------
+# EJEMPLO:
+# TOKEN = "8934368812:AAE7hb0dv6sDiOrtpVW3rn4HAPvUZOzuiJw"
+# ---------------------------------------------------------
 TOKEN = "8934368812:AAE7hb0dv6sDiOrtpVW3rn4HAPvUZOzuiJw"
 
 TELEGRAM_URL = f"https://api.telegram.org/bot{TOKEN}/"
@@ -27,7 +29,7 @@ def send_chart(chat_id, title):
     send_message(chat_id, f"📈 Gráfico premium: <b>{title}</b>\n(placeholder)")
 
 # ---------------------------
-# Informe 06:00
+# Informes automáticos
 # ---------------------------
 def informe_0600():
     hoy = datetime.date.today().strftime("%d/%m/%Y")
@@ -59,7 +61,7 @@ Mercado estable, tendencia alcista, riesgo controlado.
 # ---------------------------
 def alerta_premium(activo, nivel):
     return f"""
-🔔 <b>Alerta Premium</b>
+🚨 <b>Alerta Premium</b>
 Activo: <b>{activo}</b>
 Nivel detectado: <b>{nivel}</b>
 
@@ -90,7 +92,7 @@ Actualizado cada minuto.
 """
 
 # ---------------------------
-# Análisis premium por activo
+# Comandos premium
 # ---------------------------
 def comando_premium(activo):
     return f"""
@@ -106,61 +108,6 @@ def comando_premium(activo):
 
 <b>Conclusión</b>
 Activo en fase técnica favorable.
-"""
-
-# ---------------------------
-# Elliott Wave
-# ---------------------------
-def elliott(activo):
-    return f"""
-📐 <b>Elliott Wave — {activo}</b>
-
-<b>Conteo actual</b>
-• Onda 3 extendida
-• Onda 4 en corrección
-• Onda 5 pendiente de confirmación
-
-<b>Zonas clave</b>
-• Soporte estructural
-• Resistencia de impulso
-
-<b>Conclusión</b>
-Estructura técnica madura, esperar confirmación de Onda 5.
-"""
-
-# ---------------------------
-# Gann — Cuadrado 9
-# ---------------------------
-def gann(activo):
-    return f"""
-🌀 <b>Gann — Cuadrado 9 — {activo}</b>
-
-<b>Niveles clave</b>
-• 360° — Zona de agotamiento
-• 180° — Soporte dinámico
-• 90° — Punto de giro
-
-<b>Análisis</b>
-Ciclo en fase avanzada, riesgo de reversión moderado.
-"""
-
-# ---------------------------
-# Ibex 35 — Premium
-# ---------------------------
-def ibex_premium():
-    return """
-🇪🇸 <b>Ibex 35 — Análisis Premium</b>
-
-<b>Estructura</b>
-• Tendencia: Alcista moderada
-• Soporte: 10,200
-• Resistencia: 10,600
-
-<b>Proyección</b>
-• Movimiento esperado: Rango con sesgo alcista
-
-<b>Conclusión</b>
-Ibex en zona técnica relevante, monitorizar niveles clave.
 """
 
 # ---------------------------
@@ -185,4 +132,19 @@ async def webhook(request: Request):
             send_message(chat_id, radar())
         elif text == "/informe":
             send_message(chat_id, informe_0600())
-        elif
+        elif text.startswith("/alerta"):
+            send_message(chat_id, alerta_premium("SP500", "5200"))
+        elif text.startswith("/grafico"):
+            send_chart(chat_id, "SP500")
+
+        # ---------------------------
+        # Comandos premium por activo
+        # ---------------------------
+        elif text in ["/sp500", "/nasdaq", "/dax", "/eurusd", "/btc", "/oro"]:
+            activo = text.replace("/", "").upper()
+            send_message(chat_id, comando_premium(activo))
+
+        else:
+            send_message(chat_id, "Comando no reconocido. Usa /resumen, /radar, /informe, /alerta o activos.")
+
+    return {"ok": True}
